@@ -781,13 +781,13 @@ uint32_t SL25::readReg32Bit(uint16_t reg)
     return value_;
 } 
 
-namespace SL06 {
+namespace SL25_ {
     static SL25 *ptr = new SL25;
 
     //%
-    void init()
+    void init(bool io_2v8)
     {
-        ptr->init();
+        ptr->init(io_2v8);
     }
 
     //%
@@ -801,6 +801,7 @@ namespace SL06 {
     {
         ptr->setMeasurementTimingBudget(budget_us);
     }
+    
     //%
     void setTimeout(uint16_t timeout)
     {
@@ -814,8 +815,8 @@ namespace SL06 {
     }
 
     //%
-    void read()
+    uint16_t read()
     {
-        ptr->read();
+        return ptr->read();
     } 
 }
