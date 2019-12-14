@@ -1,5 +1,5 @@
 //% color=#444444 icon="\uf0eb"
-namespace SL26 {
+namespace SL25 {
 
     export enum DistanceMode {
         //% block="short"
@@ -13,38 +13,44 @@ namespace SL26 {
     }
 
     //%block="SL25 initialize"
-    //%shim=SL25::init
-    export function init(): void {
+    //%shim=SL25_::init
+    export function init(io_2v8: boolean): void {
         return;
     }
 
     //%block="SL25 setDistanceMode %u"
-    //%shim=SL25::setDistanceMode
+    //%shim=SL25_::setDistanceMode
     export function setDistanceMode(u: DistanceMode): number {
         return 1;
     }
 
     //%block="SL25 setMeasurementTimingBudget"
-    //%shim=SL25::setMeasurementTimingBudget
+    //%shim=SL25_::setMeasurementTimingBudget
     export function setMeasurementTimingBudget(timing: number): void {
         return;
     }
 
     //%block="SL25 startContinuous"
-    //%shim=SL25::startContinuous
+    //%shim=SL25_::startContinuous
     export function startContinuous(x: number): void {
         return;
     }
 
-    //%block="SL25 disable power"
-    //%shim=SL25::disablePower
-    export function disbalePower(): void {
+    //%block="SL25 read"
+    //%shim=SL25_::read
+    export function read(): number {
+        return 1;
+    }
+
+    //%block="SL25 setTimeout"
+    //%shim=SL25_::setTimeout
+    export function setTimeout(timeout: number): void {
         return;
     }
 
-    //%block="SL25 read"
-    //%shim=SL25::read
-    export function read(): void {
-        return;
-    }
+    setTimeout(500)
+    init(true);
+    setDistanceMode(DistanceMode.Long)
+    setMeasurementTimingBudget(50000)
+    startContinuous(50)
 }
