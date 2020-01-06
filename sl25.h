@@ -8,7 +8,7 @@ class SL25
   public:
 
     // register addresses from API vl53l1x_register_map.h
-    enum regAddr : uint16_t
+    enum regAddr
     {
       SOFT_RESET                                                                 = 0x0000,
       I2C_SLAVE__DEVICE_ADDRESS                                                  = 0x0001,
@@ -1200,7 +1200,7 @@ class SL25
 
     enum DistanceMode { Short, Medium, Long, Unknown };
 
-    enum RangeStatus : uint8_t
+    enum RangeStatus
     {
       RangeValid                =   0,
 
@@ -1309,7 +1309,7 @@ class SL25
 
     // The Arduino two-wire interface uses a 7-bit number for the address,
     // and sets the last bit correctly based on reads and writes
-    static const uint8_t AddressDefault = 0b0101001;
+    static const uint8_t AddressDefault = 0b01010010;
 
     // value used in measurement timing budget calculations
     // assumes PresetMode is LOWPOWER_AUTONOMOUS
@@ -1382,6 +1382,4 @@ class SL25
 
     // Convert count rate from fixed point 9.7 format to float
     float countRateFixedToFloat(uint16_t count_rate_fixed) { return (float)count_rate_fixed / (1 << 7); }
-    
-    MicroBit uBit;
 };
