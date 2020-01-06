@@ -738,7 +738,7 @@ uint8_t SL25::readReg(regAddr reg)
     uint8_t command[2];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
-    last_status = uBit.i2c.write(address, (const char *)&reg, 2, true);
+    last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
     char value[1];
     last_status = uBit.i2c.read(address, (char *)value, 1);
     return value[0];
@@ -752,7 +752,7 @@ uint16_t SL25::readReg16Bit(uint16_t reg)
     uint8_t command[2];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
-    last_status = uBit.i2c.write(address, (const char *)&reg, 2, true);
+    last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
 
     char value[2];
     last_status = uBit.i2c.read(address, (char *)value, 2);
@@ -769,7 +769,7 @@ uint32_t SL25::readReg32Bit(uint16_t reg)
     uint8_t command[2];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
-    last_status = uBit.i2c.write(address, (const char *)&reg, 2, true);
+    last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
 
     char value[4];
     last_status = uBit.i2c.read(address, (char *)value, 4);
@@ -785,7 +785,7 @@ namespace SL25_ {
     static SL25 *ptr = new SL25;
 
     //%
-    void init(bool io_2v8)
+    void init(bool io_2v8=true)
     {
         ptr->init(io_2v8);
     }
