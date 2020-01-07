@@ -7,12 +7,13 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "core": "file:../core"
+        "core": "*"
     },
     "files": [
         "README.md",
-        "sl25.ts",
-        "sl25.h"
+        "sl25.h",
+        "sl25.cpp",
+        "sl25.ts"
     ],
     "testFiles": [
         "test.ts"
