@@ -1,8 +1,10 @@
 #pragma once
-#include "inttypes.h"
-#include "MicroBitSystemTimer.h"
-#include "MicroBit.h"
+#ifdef CODAL_I2C
+#include "Pin.h"
+#include "I2C.h"
+#endif
 #include "pxt.h"
+#include "inttypes.h"
 class SL25
 {
   public:
@@ -1382,4 +1384,5 @@ class SL25
 
     // Convert count rate from fixed point 9.7 format to float
     float countRateFixedToFloat(uint16_t count_rate_fixed) { return (float)count_rate_fixed / (1 << 7); }
+    void sleep_(int time_ms);
 };
