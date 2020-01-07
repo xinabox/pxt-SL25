@@ -1,3 +1,5 @@
+#ifndef SL25_H
+#define SL25_H
 // #pragma once
 // #ifdef CODAL_I2C
 // #include "Pin.h"
@@ -1386,3 +1388,4 @@
 //     float countRateFixedToFloat(uint16_t count_rate_fixed) { return (float)count_rate_fixed / (1 << 7); }
 //     void sleep_(int time_ms);
 // };
+#endif
