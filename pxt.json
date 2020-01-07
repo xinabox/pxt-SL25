@@ -11,7 +11,8 @@
     },
     "files": [
         "README.md",
-        "sl25.ts"
+        "sl25.ts",
+        "sl25.h"
     ],
     "testFiles": [
         "test.ts"
