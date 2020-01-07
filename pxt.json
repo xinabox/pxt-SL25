@@ -2,9 +2,12 @@
     "name": "SL25",
     "version": "0.0.1",
     "description": "XinaBox SL25 - Time of Flight Sensor",
+    "authors": [
+        "Luqmaan Baboo"
+    ],
     "license": "MIT",
     "dependencies": {
-        "core": "*"
+        "core": "file:../core"
     },
     "files": [
         "README.md",
