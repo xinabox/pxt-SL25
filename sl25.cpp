@@ -4,8 +4,6 @@
 // SL25 datasheet.
 
 #include "sl25.h"
-#include "MicroBitI2C.h"
-#include "MicroBit.h"
 
 // Constructors ////////////////////////////////////////////////////////////////
 
@@ -42,12 +40,12 @@ bool SL25::init(bool io_2v8)
     // VL53L1_software_reset() begin
 
     writeReg(SOFT_RESET, 0x00);
-    uBit.sleep(100/1000);
+    sleep_(100/1000);
     writeReg(SOFT_RESET, 0x01);
 
     // give it some time to boot; otherwise the sensor NACKs during the readReg()
     // call below and the Arduino 101 doesn't seem to handle that well
-    uBit.sleep(1);
+    sleep_(1);
 
     // VL53L1_poll_for_boot_completion() begin
 
@@ -699,28 +697,55 @@ uint32_t SL25::calcMacroPeriod(uint8_t vcsel_period)
 // Write an 8-bit register
 void SL25::writeReg(uint16_t reg, uint8_t value)
 {
+    #ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+    #endif
 
     uint8_t command[3];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
     command[2] = value;
-    last_status=uBit.i2c.write(address, (const char *)command, 3);
+
+    #ifdef CODAL_I2C
+    last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 3, false);
+    #else
+    last_status = uBit.i2c.write(address, (const char *)&command, 3, false);
+    #endif
 }
 
 // Write a 16-bit register
 void SL25::writeReg16Bit(uint16_t reg, uint16_t value)
 {
+    #ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+    #endif
+
     uint8_t command[4];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
     command[2] = (value >> 8) & 0xFF;
     command[3]= value       & 0xFF;
-    last_status=uBit.i2c.write(address, (const char *)command, 4);
+
+    #ifdef CODAL_I2C
+    last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 4, false);
+    #else
+    last_status = uBit.i2c.write(address, (const char *)&command, 4, false);
+    #endif
 }
 
 // Write a 32-bit register
 void SL25::writeReg32Bit(uint16_t reg, uint32_t value)
 {
+    #ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+    #endif
+
     uint8_t command[6];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
@@ -728,34 +753,71 @@ void SL25::writeReg32Bit(uint16_t reg, uint32_t value)
     command[3]= (value >> 16)       & 0xFF;
     command[4] = (value >> 8) & 0xFF;
     command[5]= value       & 0xFF;
-    last_status=uBit.i2c.write(address, (const char *)command, 6);
+
+    #ifdef CODAL_I2C
+    last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 6, false);
+    #else
+    last_status = uBit.i2c.write(address, (const char *)&command, 6, false);
+    #endif
 }
 
 // Read an 8-bit register
 uint8_t SL25::readReg(regAddr reg)
 {
+    #ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+    #endif
+
     uint8_t result;
     uint8_t command[2];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
+
+    #ifdef CODAL_I2C
+    last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 2, true);
+    #else
     last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
+    #endif
+
     char value[1];
+    #ifdef CODAL_I2C
+    last_status = i2c->read((uint16_t)address, (uint8_t *)value, 1);
+    #else
     last_status = uBit.i2c.read(address, (char *)value, 1);
+    #endif
     return value[0];
 }
 
 // Read a 16-bit register
 uint16_t SL25::readReg16Bit(uint16_t reg)
 {
+    #ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+    #endif
+
     uint16_t value_;
     uint8_t result;
     uint8_t command[2];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
+
+    #ifdef CODAL_I2C
+    last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 2, true);
+    #else
     last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
+    #endif
 
     char value[2];
+    #ifdef CODAL_I2C
+    last_status = i2c->read((uint16_t)address, (uint8_t *)value, 2);
+    #else
     last_status = uBit.i2c.read(address, (char *)value, 2);
+    #endif
+
     value_  = (uint16_t)value[0] << 8; // value high byte
     value_ |=           value[1];      // value low byte
 
@@ -765,21 +827,45 @@ uint16_t SL25::readReg16Bit(uint16_t reg)
 // Read a 32-bit register
 uint32_t SL25::readReg32Bit(uint16_t reg)
 {
+    #ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+    #endif
+
     uint32_t value_;
     uint8_t command[2];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
+    #ifdef CODAL_I2C
+    i2c->write((uint16_t)address, (uint8_t *)&command, 2, true);
+    #else
     last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
+    #endif
 
     char value[4];
+    #ifdef CODAL_I2C
+    last_status = i2c->read((uint16_t)address, (uint8_t *)value, 4);
+    #else
     last_status = uBit.i2c.read(address, (char *)value, 4);
+    #endif
+
     value_  = (uint16_t)value[0] << 24; // value high byte
     value_ |= (uint16_t)value[1] << 26 ; // value low byte
     value_  = (uint16_t)value[2] << 8; // value high byte
     value_ |=           value[3];      // value low byte
 
     return value_;
-} 
+}
+
+void SL25::sleep_(int time_ms)
+{
+    #ifdef CODAL_I2C
+    sleep(time_ms)
+    #else
+    uBit.sleep(time_ms);
+    #endif
+}
 
 namespace SL25_ {
     static SL25 *ptr = new SL25;
