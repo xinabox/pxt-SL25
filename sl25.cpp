@@ -1,10 +1,5 @@
 #include "sl25.h"
 
-#ifdef CODAL_I2C
-auto sda = LOOKUP_PIN(SDA);
-auto scl = LOOKUP_PIN(SCL);
-codal::I2C *i2c = pxt::getI2C(sda, scl);
-#endif
 SL25::SL25()
     : address(AddressDefault), io_timeout(0), did_timeout(false), calibrated(false), saved_vhv_init(0), saved_vhv_timeout(0), distance_mode(Unknown)
 {
@@ -480,6 +475,11 @@ uint32_t SL25::calcMacroPeriod(uint8_t vcsel_period)
 // // Write an 8-bit register
 void SL25::writeReg(uint16_t reg, uint8_t value)
 {
+#ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+#endif
     uint8_t command[3];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
@@ -495,6 +495,11 @@ void SL25::writeReg(uint16_t reg, uint8_t value)
 // Write a 16-bit register
 void SL25::writeReg16Bit(uint16_t reg, uint16_t value)
 {
+#ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+#endif
     uint8_t command[4];
     command[0] = (reg >> 8) & 0xFF;
     command[1]= reg       & 0xFF;
@@ -510,6 +515,11 @@ void SL25::writeReg16Bit(uint16_t reg, uint16_t value)
 
 void SL25::writeReg32Bit(uint16_t reg, uint32_t value)
 {
+#ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+#endif
     uint8_t command[6];
     command[0] = (reg >> 8) & 0xFF;
     command[1] = reg & 0xFF;
@@ -527,6 +537,11 @@ void SL25::writeReg32Bit(uint16_t reg, uint32_t value)
 
 uint8_t SL25::readReg(regAddr reg)
 {
+#ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+#endif
     uint8_t result;
     uint8_t command[2];
     command[0] = (reg >> 8) & 0xFF;
@@ -549,6 +564,11 @@ uint8_t SL25::readReg(regAddr reg)
 
 uint16_t SL25::readReg16Bit(uint16_t reg)
 {
+ #ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+#endif
     uint16_t value_;
     uint8_t result;
     uint8_t command[2];
@@ -576,6 +596,11 @@ uint16_t SL25::readReg16Bit(uint16_t reg)
 
 uint32_t SL25::readReg32Bit(uint16_t reg)
 {
+#ifdef CODAL_I2C
+    auto sda = LOOKUP_PIN(SDA);
+    auto scl = LOOKUP_PIN(SCL);
+    codal::I2C *i2c = pxt::getI2C(sda, scl);
+#endif
     uint32_t value_;
     uint8_t command[2];
     command[0] = (reg >> 8) & 0xFF;
