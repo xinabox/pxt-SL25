@@ -540,7 +540,7 @@ uint8_t SL25::readReg(regAddr reg)
 
     char value[1];
 #ifdef CODAL_I2C
-    last_status = i2c->read((uint16_t)address, (uint8_t *)value, 1);
+    last_status = i2c->read((uint16_t)address, (uint8_t *)&value, 1);
 #else
     last_status = uBit.i2c.read(address, (char *)value, 1);
 #endif
