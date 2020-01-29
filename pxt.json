@@ -1,7 +1,7 @@
 {
     "name": "SL25",
     "version": "0.0.1",
-    "description": "XinaBox SL25 - Time of Flight Sensor",
+    "description": "XinaBox SL25 Time of Flight Sensor: Distance",
     "authors": [
         "Luqmaan Baboo"
     ],
