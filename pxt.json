@@ -7,7 +7,8 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "core": "*"
+        "core": "*",
+        "xinabox-cs11": "*"
     },
     "files": [
         "README.md",
