@@ -1,5 +1,12 @@
 #include "sl25.h"
 
+#if MICROBIT_CODAL
+#define BUFFER_TYPE uint8_t*
+#else
+#define BUFFER_TYPE char*
+#endif
+
+
 SL25::SL25()
     : address(AddressDefault), io_timeout(0), did_timeout(false), calibrated(false), saved_vhv_init(0), saved_vhv_timeout(0), distance_mode(Unknown)
 {
@@ -281,7 +288,7 @@ void SL25::readResults()
 #ifdef CODAL_I2C
     last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 2, true);
 #else
-    last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
+    last_status = uBit.i2c.write(address, (BUFFER_TYPE)command, 2, true);
 #endif
 
     char value[17];
@@ -289,7 +296,7 @@ void SL25::readResults()
 #ifdef CODAL_I2C
     last_status = i2c->read((uint16_t)address, (uint8_t *)value, 17);
 #else
-    last_status = uBit.i2c.read(address, (char *)value, 17);
+    last_status = uBit.i2c.read(address, (BUFFER_TYPE)value, 17);
 #endif
     results.range_status = value[0];
 
@@ -488,7 +495,7 @@ void SL25::writeReg(uint16_t reg, uint8_t value)
     #ifdef CODAL_I2C
     last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 3, false);
     #else
-    last_status = uBit.i2c.write(address, (const char *)&command, 3, false);
+    last_status = uBit.i2c.write(address, (BUFFER_TYPE)command, 3, false);
     #endif
 }
 
@@ -509,7 +516,7 @@ void SL25::writeReg16Bit(uint16_t reg, uint16_t value)
     #ifdef CODAL_I2C
     last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 4, false);
     #else
-    last_status = uBit.i2c.write(address, (const char *)&command, 4, false);
+    last_status = uBit.i2c.write(address, (BUFFER_TYPE)command, 4, false);
     #endif
 }
 
@@ -531,7 +538,7 @@ void SL25::writeReg32Bit(uint16_t reg, uint32_t value)
 #ifdef CODAL_I2C
     last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 6, false);
 #else
-    last_status = uBit.i2c.write(address, (const char *)&command, 6, false);
+    last_status = uBit.i2c.write(address, (BUFFER_TYPE)command, 6, false);
 #endif
 }
 
@@ -550,14 +557,14 @@ uint8_t SL25::readReg(regAddr reg)
 #ifdef CODAL_I2C
     last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 2, true);
 #else
-    last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
+    last_status = uBit.i2c.write(address, (BUFFER_TYPE)command, 2, true);
 #endif
 
     char value[1];
 #ifdef CODAL_I2C
     last_status = i2c->read((uint16_t)address, (uint8_t *)&value, 1);
 #else
-    last_status = uBit.i2c.read(address, (char *)value, 1);
+    last_status = uBit.i2c.read(address, (BUFFER_TYPE)value, 1);
 #endif
     return value[0];
 }
@@ -578,14 +585,14 @@ uint16_t SL25::readReg16Bit(uint16_t reg)
 #ifdef CODAL_I2C
     last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 2, true);
 #else
-    last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
+    last_status = uBit.i2c.write(address, (BUFFER_TYPE)command, 2, true);
 #endif
 
     char value[2];
 #ifdef CODAL_I2C
     last_status = i2c->read((uint16_t)address, (uint8_t *)value, 2);
 #else
-    last_status = uBit.i2c.read(address, (char *)value, 2);
+    last_status = uBit.i2c.read(address, (BUFFER_TYPE)value, 2);
 #endif
 
     value_ = (uint16_t)value[0] << 8; // value high byte
@@ -608,14 +615,14 @@ uint32_t SL25::readReg32Bit(uint16_t reg)
 #ifdef CODAL_I2C
     last_status = i2c->write((uint16_t)address, (uint8_t *)&command, 2, true);
 #else
-    last_status = uBit.i2c.write(address, (const char *)&command, 2, true);
+    last_status = uBit.i2c.write(address, (BUFFER_TYPE)command, 2, true);
 #endif
 
     char value[4];
 #ifdef CODAL_I2C
     last_status = i2c->read((uint16_t)address, (uint8_t *)value, 4);
 #else
-    last_status = uBit.i2c.read(address, (char *)value, 4);
+    last_status = uBit.i2c.read(address, (BUFFER_TYPE)value, 4);
 #endif
 
     value_ = (uint16_t)value[0] << 24;  // value high byte
